@@ -9,13 +9,13 @@ router.post('/createUser', userController.createUser);
 router.get('/getAllUsers', userController.getAllUsers);
 
 // Get a user by ID
-router.get('/getUserById', userController.getUserById);
+router.get('/getUserById/:id', userController.getUserById);
 
 // Update a user by ID
-router.get('/updateUser', userController.updateUser);
+router.post('/updateUser/:id', userController.updateUser);
 
 // Delete a user by ID
-router.get('/deleteUser', userController.deleteUser);
+router.post('/deleteUser/:id', userController.deleteUser);
 
 // User Login
 router.post('/login', userController.loginUser);

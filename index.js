@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
 const roleRouter = require('./routes/roleRoute')
+const departmentRouter = require('./routes/departmentRoute');
+const categoryRouter = require('./routes/categoryRoute')
 dotenv.config();
 
 const app = express();
@@ -19,6 +21,8 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 app.use('/users', userRoutes);
 app.use('/role',roleRouter);
+app.use('/department',departmentRouter)
+app.use('/category',categoryRouter)
 
 // Start the server
 app.listen(PORT, () => {

@@ -2,6 +2,14 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
+    departmentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department'
+    },
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'  
+    },
     name: {
         type: String,
         required: true,
@@ -21,15 +29,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlength: 6, 
+        minlength: 6,
     },
-    email:{
-        type:String,
-        
+    email: {
+        type: String,
     },
     roleId: {
         type: Number,
-        ref: 'role', 
+        ref: 'Role',  // Make sure the reference is capitalized correctly
         required: true,
     },
     attendance: [
@@ -39,6 +46,10 @@ const userSchema = new mongoose.Schema({
             rescan: { type: Date, default: null },
         },
     ],
+    profilePicture: {
+        type: String,  // This will store the URL/path to the profile picture
+        default: null, // Set a default value if no picture is uploaded
+    },
 });
 
 // Hash password before saving user
