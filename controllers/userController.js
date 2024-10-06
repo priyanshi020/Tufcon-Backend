@@ -1,11 +1,11 @@
 
 const User = require('../models/User');
-
+const upload = require('../config/uploadConfig');
 // Login User
-const jwt = require('jsonwebtoken'); // Ensure this is imported
+const jwt = require('jsonwebtoken'); 
 
 exports.loginUser = async (req, res) => {
-    const { email, password } = req.body; // assuming you have email for login
+    const { email, password } = req.body;
 
     try {
         // Find user by email
@@ -22,7 +22,7 @@ exports.loginUser = async (req, res) => {
 
         // Generate JWT token with user id, role id, and name
         const token = jwt.sign(
-            { id: user._id, roleId: user.roleId, name: user.name }, // Include name in the token payload
+            { id: user._id, roleId: user.roleId, name: user.name }, 
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -59,45 +59,54 @@ exports.loginUser = async (req, res) => {
 //         res.status(500).json({ message: 'Server error' });
 //     }
 // };
-// Create a new user
 exports.createUser = async (req, res) => {
-    const { departmentId, categoryId, name, age, rate, salary, password, email, roleId, profilePicture } = req.body;
-
-    try {
+    // Use multer to upload the file
+    upload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ message: err });
+      }
+  
+      const { departmentId, categoryId, name, age, rate, salary, password, email, roleId } = req.body;
+      const userImg = req.file ? req.file.filename : '';  // Store the file name/path if uploaded
+  
+      try {
+        // Create a new user with the provided details and uploaded image
         const newUser = new User({
-            departmentId,
-            categoryId,
-            name,
-            age,
-            rate,
-            salary,
-            password,
-            email,
-            roleId,
-            profilePicture, // Include profilePicture here
+          departmentId,
+          categoryId,
+          name,
+          age,
+          rate,
+          salary,
+          password,
+          email,
+          roleId,
+          userImg  // Save the uploaded image file name/path here
         });
-
-        await newUser.save();
-        res.status(201).json(newUser);
-    } catch (err) {
+  
+        await newUser.save();  // Save the user in the database
+        res.status(201).json(newUser);  // Respond with the created user data
+      } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
-    }
-};
+      }
+    });
+  };
+
 
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
-    const { departmentId, categoryId } = req.query; // Get departmentId and categoryId from query parameters
+    const { departmentId, categoryId } = req.query; 
 
     try {
         // Construct the filter
         const filter = {};
         if (departmentId) {
-            filter.departmentId = departmentId; // Filter by departmentId if provided
+            filter.departmentId = departmentId; 
         }
         if (categoryId) {
-            filter.categoryId = categoryId; // Filter by categoryId if provided
+            filter.categoryId = categoryId; 
         }
 
         const users = await User.find(filter).populate('departmentId').populate('categoryId');
@@ -112,8 +121,8 @@ exports.getAllUsers = async (req, res) => {
 exports.getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
-            .populate('departmentId')  // Populate department details
-            .populate('categoryId')    // Populate category details
+            .populate('departmentId')  
+            .populate('categoryId')  
            
 
         if (!user) {
@@ -161,7 +170,7 @@ exports.getUserById = async (req, res) => {
 // Update a user by ID
 exports.updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, age, rate, salary, email, departmentId, categoryId, roleId, profilePicture } = req.body; // Add profilePicture
+    const { name, age, rate, salary, email, departmentId, categoryId, roleId, profilePicture } = req.body; 
 
     try {
         // Find user by ID and update
@@ -176,9 +185,9 @@ exports.updateUser = async (req, res) => {
                 departmentId,
                 categoryId,
                 roleId,
-                profilePicture, // Include profilePicture in the update
+                profilePicture, 
             },
-            { new: true, runValidators: true } // options: new returns the updated document, runValidators applies schema validation
+            { new: true, runValidators: true } 
         );
 
         if (!user) {

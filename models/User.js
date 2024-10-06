@@ -46,9 +46,9 @@ const userSchema = new mongoose.Schema({
             rescan: { type: Date, default: null },
         },
     ],
-    profilePicture: {
-        type: String,  // This will store the URL/path to the profile picture
-        default: null, // Set a default value if no picture is uploaded
+    userImg: {
+        type: String,
+        default: null,
     },
 });
 
