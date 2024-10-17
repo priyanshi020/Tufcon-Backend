@@ -6,6 +6,8 @@ const roleRouter = require('./routes/roleRoute')
 const departmentRouter = require('./routes/departmentRoute');
 const categoryRouter = require('./routes/categoryRoute')
 dotenv.config();
+const attendanceRoutes = require('./routes/attendenceRoute');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +26,7 @@ app.use('/users', userRoutes);
 app.use('/role',roleRouter);
 app.use('/department',departmentRouter)
 app.use('/category',categoryRouter)
+app.use('/scanning', attendanceRoutes);
 
 // Start the server
 app.listen(PORT, () => {
